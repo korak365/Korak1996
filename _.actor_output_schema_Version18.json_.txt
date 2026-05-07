@@ -1,0 +1,11 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Output Schema for Reddit Community Pulse Scraper",
+    "properties": {
+        "overview": {
+            "type": "string",
+            "title": "Pulse Report",
+            "template": "{{links.apiDefaultDatasetUrl}}/items?view=overview"
+        }
+    }
+}

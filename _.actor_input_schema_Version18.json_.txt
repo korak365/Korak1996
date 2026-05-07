@@ -1,0 +1,27 @@
+{
+    "title": "Input Schema for Reddit Community Pulse Scraper",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "subreddits": {
+            "title": "Subreddits to Scrape",
+            "type": "array",
+            "description": "List of subreddit names to scrape (e.g., 'memes', 'dankmemes').",
+            "editor": "stringArray",
+            "default": ["memes", "dankmemes"]
+        },
+        "keywordAnalysis": {
+            "title": "Keyword Analysis Depth",
+            "type": "number",
+            "description": "Specify the approximate number of top keywords to extract per subreddit.",
+            "default": 10
+        },
+        "maxPostsPerSubreddit": {
+            "title": "Number of Hot Posts to Fetch Per Subreddit",
+            "type": "integer",
+            "description": "Limit on the number of posts scraped per subreddit.",
+            "default": 25
+        }
+    },
+    "required": ["subreddits"]
+}

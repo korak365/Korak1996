@@ -1,0 +1,70 @@
+// Import required modules
+import { Actor } from 'apify';
+import fetch from 'node-fetch';
+import natural from 'natural';
+import { Dataset } from 'apify';
+
+const tokenizer = new natural.WordTokenizer();
+
+await Actor.init();
+
+const { subreddits = ['memes', 'dankmemes'], maxPostsPerSubreddit = 25, keywordAnalysis = 10 } = (await Actor.getInput()) || {};
+
+const subredditBaseUrl = 'https://www.reddit.com/r/';
+
+async function fetchHotPosts(subreddit, limit) {
+    const url = `${subredditBaseUrl}${subreddit}/hot.json?limit=${limit}`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Failed to fetch hot posts for subreddit: ${subreddit}`);
+    const json = await response.json();
+    return json.data.children.map((child) => ({
+        postId: child.data.id,
+        title: child.data.title,
+        url: `https://www.reddit.com${child.data.permalink}`,
+        upvotes: child.data.ups,
+    }));
+}
+
+function extractKeywordsFromTitles(titles, limit) {
+    const wordFrequency = {};
+
+    titles.forEach((title) => {
+        const tokens = tokenizer.tokenize(title.toLowerCase());
+        tokens.forEach((token) => {
+            if (wordFrequency[token]) {
+                wordFrequency[token]++;
+            } else {
+                wordFrequency[token] = 1;
+            }
+        });
+    });
+
+    // Sort and return the top keywords
+    return Object.entries(wordFrequency)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, limit)
+        .map(([word]) => word);
+}
+
+for (const subreddit of subreddits) {
+    console.log(`Fetching hot posts for subreddit: ${subreddit}`);
+    const posts = await fetchHotPosts(subreddit, maxPostsPerSubreddit);
+
+    console.log(`Extracting keywords for subreddit: ${subreddit}`);
+    const titles = posts.map((post) => post.title);
+    const keywords = extractKeywordsFromTitles(titles, keywordAnalysis);
+
+    console.log(`Saving data for subreddit: ${subreddit}`);
+    for (const post of posts) {
+        await Dataset.pushData({
+            subreddit,
+            postId: post.postId,
+            title: post.title,
+            keywords,
+            url: post.url,
+            upvotes: post.upvotes,
+        });
+    }
+}
+
+await Actor.exit();

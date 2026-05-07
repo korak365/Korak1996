@@ -1,0 +1,65 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "subreddit": {
+            "type": "string",
+            "title": "Subreddit Name"
+        },
+        "postId": {
+            "type": "string",
+            "title": "Post ID"
+        },
+        "title": {
+            "type": "string",
+            "title": "Post Title"
+        },
+        "keywords": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "title": "Extracted Keywords"
+        },
+        "url": {
+            "type": "string",
+            "title": "Post URL"
+        },
+        "upvotes": {
+            "type": "integer",
+            "title": "Number of Upvotes"
+        }
+    },
+    "views": {
+        "overview": {
+            "title": "Trending Memes",
+            "transformation": {
+                "fields": ["subreddit", "title", "keywords", "url", "upvotes"]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "subreddit": {
+                        "label": "Subreddit",
+                        "format": "text"
+                    },
+                    "title": {
+                        "label": "Post Title",
+                        "format": "text"
+                    },
+                    "keywords": {
+                        "label": "Keywords",
+                        "format": "array"
+                    },
+                    "url": {
+                        "label": "Post URL",
+                        "format": "link"
+                    },
+                    "upvotes": {
+                        "label": "Upvotes",
+                        "format": "number"
+                    }
+                }
+            }
+        }
+    }
+}

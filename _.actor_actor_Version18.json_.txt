@@ -1,0 +1,17 @@
+{
+    "actorSpecification": 1,
+    "name": "reddit-community-pulse-scraper",
+    "title": "Reddit Community Pulse Scraper",
+    "description": "Scrapes popular posts across specific subreddits to identify trending and 'hot' keywords that signify emerging memes.",
+    "version": "0.0",
+    "meta": {
+        "templateId": "ai-generated-actor",
+        "generatedBy": "copilot-2026"
+    },
+    "input": "./input_schema.json",
+    "output": "./output_schema.json",
+    "storages": {
+        "dataset": "./dataset_schema.json"
+    },
+    "dockerfile": "../Dockerfile"
+}
